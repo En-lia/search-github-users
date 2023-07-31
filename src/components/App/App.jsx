@@ -1,12 +1,15 @@
 import React from 'react';
-import { BrowserRouter } from 'react-router-dom';
+import { HashRouter } from 'react-router-dom';
 import AppRouter from '../AppRouter/AppRouter';
+// import { BrowserRouter } from 'react-router-dom'; //for gh page
 
 const App = () => {
   return (
-      <BrowserRouter>
-          <AppRouter />
-      </BrowserRouter>
+      <div>
+          <HashRouter>
+              <AppRouter />
+          </HashRouter>
+      </div>
   );
 };
 
