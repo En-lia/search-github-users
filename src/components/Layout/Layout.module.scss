@@ -1,0 +1,37 @@
+.layout {
+  height: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #1e1e1e;
+  align-items: center;
+
+  &Container {
+    width: 800px;
+    background-color: #343434;
+    flex: 1;
+    height: 100%;
+  }
+
+  &Header{
+    background-color: #033d6a;
+    width: 100%;
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    color: #939393;
+    cursor: pointer;
+  }
+
+  &Footer{
+    background-color: #383528;
+    width: 100%;
+    height: 100px;
+    color: #939393;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}

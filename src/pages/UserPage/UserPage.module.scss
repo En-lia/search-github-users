@@ -1,0 +1,42 @@
+.userPage {
+  color: #cbd4de;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+
+  &Title {
+    margin: 10px 0 5px 0;
+    color: #ffffff;
+  }
+
+  &Section {
+    margin-top: 10px;
+  }
+
+  &InfoIcon {
+    margin-right: 5px;
+  }
+
+  &LinkBtn {
+    margin-top: 20px;
+  }
+
+  &BriefInfoSection {
+    margin-top: 10px;
+    border: 1px solid #cbd4de;
+    border-radius: 20px;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+  }
+
+  &Loader {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+}

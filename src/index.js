@@ -1,17 +1,22 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import { ApolloProvider, ApolloClient, InMemoryCache } from '@apollo/client';
+import App from './components/App/App';
+import './styles/index.scss';
+
+const client = new ApolloClient(
+    {
+        uri: 'https://api.github.com/graphql',
+        cache: new InMemoryCache(),
+        headers: {
+            'Authorization': 'bearer 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', // Read ALL user profile data (read only token until Aug 29 2023)
+        },
+    },
+);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
+    <ApolloProvider client={client}>
+        <App />
+    </ApolloProvider>,
 );
-
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();

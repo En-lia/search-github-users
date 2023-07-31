@@ -1,0 +1,32 @@
+.userItem {
+  display: flex;
+  padding: 20px;
+  background-color: #113c5d;
+  border: 1px solid #113c5d;
+  border-radius: 10px;
+  margin-top: 25px;
+  color: #939393;
+  cursor: pointer;
+
+  &:hover {
+    border: 1px solid #939393;
+  }
+
+  &Content {
+    display: flex;
+    flex-direction: column;
+    margin-left: 20px;
+    color: #92a6c0;
+  }
+
+  &Title {
+    color: #ffffff;
+    font-size: 20px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  &Link {
+    margin-top: 10px;
+  }
+}
