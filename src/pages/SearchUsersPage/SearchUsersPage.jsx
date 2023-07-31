@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { Button, Input, Empty, Select } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import { debounce } from 'lodash';
@@ -6,6 +6,17 @@ import { getUsers } from '../../API/usersAPI';
 import UserList from '../../components/UserList/UserList';
 import { getTotalPage } from '../../utils/helper';
 import classes from './SearchUsersPage.module.scss';
+
+const SORT_OPTIONS = [
+    {
+        value: 'asc',
+        label: 'репозитории по ↑',
+    },
+    {
+        value: 'desc',
+        label: 'репозитории по ↓',
+    },
+];
 
 const SearchUsersPage = () => {
     const [users, setUsers] = useState([]);
@@ -15,10 +26,13 @@ const SearchUsersPage = () => {
     const [usersCount, setUsersCount] = useState(null);
     const [sortMethod, setSortMethod] = useState(null);
     const [order, setOrder] = useState(null);
+    const [errorMessage, setErrorMessage] = useState(null);
 
-    const totalPage = useMemo(() => {
-        return getTotalPage(usersCount);
-    }, [usersCount]);
+    const totalPage = useMemo(() => getTotalPage(usersCount), [usersCount]);
+
+    const searchUserErrorCallback = useCallback((e) => {
+        setErrorMessage(e.message);
+    }, []);
 
     const searchUsers = useCallback(async (value) => {
         if (!value) {
@@ -29,21 +43,23 @@ const SearchUsersPage = () => {
         setIsLoading(true);
         setSortMethod(null);
         setOrder(null);
+        setErrorMessage(null);
 
-        const data = await getUsers({ query: value });
+        const data = await getUsers({ query: value, errorCallback: searchUserErrorCallback });
         const usersData = data?.items;
 
         if (usersData) {
             setUsers(usersData);
             setUsersCount(data?.total_count);
+        } else {
+            setUsers([]);
+            setUsersCount(null);
         }
 
         setIsLoading(false);
-    }, []);
+    }, [searchUserErrorCallback]);
 
-    const debounceSearchUsers = useMemo(() => {
-        return debounce(searchUsers, 300);
-    }, [searchUsers]);
+    const debounceSearchUsers = useMemo(() => debounce(searchUsers, 300), [searchUsers]);
 
     const searchChangeHandler = useCallback((e) => {
         setSearchQuery(e.target.value);
@@ -55,12 +71,14 @@ const SearchUsersPage = () => {
 
         if (isLoading) {
             msg = 'Идет загрузка...';
+        } else if (errorMessage) {
+            msg = errorMessage;
         } else if (!isLoading && searchQuery) {
             msg = 'Поиск не дал результатов';
         }
 
         return msg;
-    }, [isLoading, searchQuery]);
+    }, [errorMessage, isLoading, searchQuery]);
 
     const sortUsers = useCallback(async (value) => {
         setIsLoading(true);
@@ -109,16 +127,7 @@ const SearchUsersPage = () => {
                     placeholder="Сортировать по"
                     onChange={sortUsers}
                     className={classes.searchUsersPageSort}
-                    options={[
-                        {
-                            value: 'asc',
-                            label: 'репозитории по ↑',
-                        },
-                        {
-                            value: 'desc',
-                            label: 'репозитории по ↓',
-                        },
-                    ]}
+                    options={SORT_OPTIONS}
                 />
             </div>
 
@@ -126,7 +135,7 @@ const SearchUsersPage = () => {
                 ? <div className={classes.searchUsersPageUsersContent}>
                     <UserList users={users} />
                     {
-                        currentPage <= totalPage
+                        currentPage < totalPage
                         && <Button
                             onClick={showMoreUsers}
                             className={classes.searchUsersPageShowMoreBtn}
